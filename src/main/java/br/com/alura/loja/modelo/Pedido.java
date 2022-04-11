@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,14 +23,15 @@ public class Pedido {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private BigDecimal valorTotal;
+	@Column(name = "valor_total")
+	private BigDecimal valorTotal = BigDecimal.ZERO;
 	
-	private LocalDate date = LocalDate.now();
+	private LocalDate data = LocalDate.now();
 	
 	@ManyToOne
 	private Cliente cliente;
 	
-	@OneToMany(mappedBy = "pedido")
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>();
 	
 	public Pedido() {
@@ -36,16 +39,21 @@ public class Pedido {
 	}
 
 	public Pedido(Cliente cliente) {
-		super();
+		
 		this.cliente = cliente;
 	}
 	
 	// vincular os valores de duas classes, ou seja, dicionar 2 valores de classes
+	//valor bidirecional
 	public void adicionar(ItemPedido item) {
 		item.setPedido(this);
 		this.itens.add(item);
+		//soma o valor total com a valor do item.
+		this.valorTotal = this.valorTotal.add(item.getValor());
 	}
 
+	// getters and setters
+	
 	public Long getId() {
 		return id;
 	}
@@ -63,11 +71,11 @@ public class Pedido {
 	}
 
 	public LocalDate getDate() {
-		return date;
+		return data;
 	}
 
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setDate(LocalDate data) {
+		this.data = data;
 	}
 
 	public Cliente getCliente() {
