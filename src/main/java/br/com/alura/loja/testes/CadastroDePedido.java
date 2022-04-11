@@ -15,6 +15,7 @@ import br.com.alura.loja.modelo.ItemPedido;
 import br.com.alura.loja.modelo.Pedido;
 import br.com.alura.loja.modelo.Produto;
 import br.com.alura.loja.util.JPAUtil;
+import br.com.alura.loja.vo.RelatorioDeVendasVo;
 
 public class CadastroDePedido {
 
@@ -52,13 +53,14 @@ public class CadastroDePedido {
 		BigDecimal valorTotal = pedidoDao.valorTotalVendido();
 		System.out.println("VALOR TOTAL: " + valorTotal);
 		
-		List<Object[]> relatorio = pedidoDao.relatorioDeVendas();
+		List<RelatorioDeVendasVo> relatorio = pedidoDao.relatorioDeVendas();
 		
-		for (Object[] obj : relatorio) {
-			System.out.println(obj[0]);
-			System.out.println(obj[1]);
-			System.out.println(obj[2]);
-		}
+//		for (Object[] obj : relatorio) {
+//			System.out.println(obj[0]);
+//			System.out.println(obj[1]);
+//			System.out.println(obj[2]);
+//		}
+		relatorio.forEach(System.out::println);
 	
 		
 
