@@ -60,7 +60,21 @@ public class PedidoDao {
 
 	}
 	
+	public Pedido buscarPedidoComCliente(Long id) {
+		
+		return em.createQuery("SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.id = :id", Pedido.class)
+				.setParameter("id", id)
+				.getSingleResult();
+		
+	}
+	
+	//Montar uma query planejada
+	
+	
 	// Vo --> value object, padrao, uma classe que so tem atributos
 	// SELECT new --> muito utilizado para quem quiser utilizar relatorios
+	
+	// JOIN FETCH --> Agora vamos falar sobre fetch joins. Seu uso principal
+	// é buscar associações de carregamento lento para a consulta atual.
 
 }

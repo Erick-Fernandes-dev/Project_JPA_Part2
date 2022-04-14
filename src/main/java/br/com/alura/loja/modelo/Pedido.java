@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +29,7 @@ public class Pedido {
 	
 	private LocalDate data = LocalDate.now();
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)//PREGUIÇOSO
 	private Cliente cliente;
 	
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
@@ -47,7 +48,7 @@ public class Pedido {
 	//valor bidirecional
 	public void adicionar(ItemPedido item) {
 		item.setPedido(this);
-		this.itens.add(item);
+		this.getItens().add(item);
 		//soma o valor total com a valor do item.
 		this.valorTotal = this.valorTotal.add(item.getValor());
 	}
@@ -70,11 +71,11 @@ public class Pedido {
 		this.valorTotal = valorTotal;
 	}
 
-	public LocalDate getDate() {
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setDate(LocalDate data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 
@@ -85,6 +86,22 @@ public class Pedido {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
+
+	public List<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(List<ItemPedido> itens) {
+		this.itens = itens;
+	}
+	
+	
+	
+	
+	//dica:
+	// ManyToOne --> Quando é to one é carregado automaticamente
+	// OneToMany --> Quando é to Many, não é carregado automaticamente
+	// todo realacionamento to One coloque o carregamento para ser LAZY, pois o psadrão é eager
 	
 
 }

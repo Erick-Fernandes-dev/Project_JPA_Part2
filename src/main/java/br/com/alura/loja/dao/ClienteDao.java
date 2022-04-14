@@ -13,7 +13,7 @@ public class ClienteDao {
 		this.em = em;
 	}
 	
-	public void Cadastrar(Cliente cliente) {
+	public void cadastrar(Cliente cliente) {
 		this.em.persist(cliente);
 	}
 	
