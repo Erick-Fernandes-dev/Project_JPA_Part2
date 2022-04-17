@@ -1,0 +1,19 @@
+
+===Mapeamento por Herança===:
+
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+
+-- A estratégia de tabela única cria uma tabela para cada hierarquia de classe.
+A JPA também escolhe essa estratégia por padrão se não especificarmos uma explicitamente.
+
+----------------------------------------------------------------------------------------------------
+
+@Inheritance(strategy = InheritanceType.JOINED)
+
+-- Usando essa estratégia, cada classe na hierarquia é mapeada para sua tabela.
+A única coluna que aparece repetidamente em todas as tabelas é o identificador, que
+será utilizado para juntá-las quando necessário.
+
+
+
+====================================================================================================
