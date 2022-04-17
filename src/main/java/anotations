@@ -1,12 +1,41 @@
 
 ===Mapeamento por Herança===:
 
+-> Single Table
+
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 
 -- A estratégia de tabela única cria uma tabela para cada hierarquia de classe.
 A JPA também escolhe essa estratégia por padrão se não especificarmos uma explicitamente.
 
+Podemos definir a estratégia que queremos usar adicionando a anotação @Inheritance à superclasse:
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class MyProduct {
+    @Id
+    private long productId;
+    private String name;
+
+    // constructor, getters, setters
+}
+
+O identificador das entidades também é definido na superclasse.
+
+Então podemos adicionar as entidades da subclasse:
+
+	@Entity
+	public class Book extends MyProduct {
+	    private String author;
+	}
+	@Entity
+	public class Pen extends MyProduct {
+	    private String color;
+	}
+
+
 ----------------------------------------------------------------------------------------------------
+-> Joined Table
 
 @Inheritance(strategy = InheritanceType.JOINED)
 
@@ -14,6 +43,91 @@ A JPA também escolhe essa estratégia por padrão se não especificarmos uma ex
 A única coluna que aparece repetidamente em todas as tabelas é o identificador, que
 será utilizado para juntá-las quando necessário.
 
+A desvantagem deste método de mapeamento de herança é que a recuperação de
+entidades requer junções entre tabelas
+
+	@Entity
+	@Inheritance(strategy = InheritanceType.JOINED)
+	public class Animal {
+	    @Id
+	    private long animalId;
+	    private String species;
+	
+	    // constructor, getters, setters 
+	}
+
+Então podemos simplesmente definir uma subclasse:
 
 
+	@Entity
+	public class Pet extends Animal {
+	    private String name;
+	
+	    // constructor, getters, setters
+	}
+
+Ambas as tabelas terão uma coluna identificadora animalId. A chave primária da entidade 
+Pet também tem uma restrição de chave estrangeira para a chave primária de sua entidade pai.
+
+
+----------------------------------------------------------------------------------------------------
+
+->Table per Class
+
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+
+-- A estratégia Table per Class mapeia cada entidade para sua tabela, que contém
+todas as propriedades da entidade, incluindo as herdadas.
+
+O esquema resultante é semelhante ao que usa @MappedSuperclass. Mas Table per Class
+realmente definirá entidades para classes pai, permitindo associações e consultas
+polimórficas como resultado.
+
+	@Entity
+	@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+	public class Vehicle {
+	    @Id
+	    private long vehicleId;
+	
+	    private String manufacturer;
+	
+	    // standard constructor, getters, setters
+	}
+
+====================================================================================================
+
+=== Mapeamento de chaves compostas ===
+
+@EmbededId
+
+-- é usado para chave primária composta. ou seja, mais de uma coluna se comporta em
+conjunto como chave primária. Precisamos criar uma entidade como Embeddable e a entidade
+Embeddable pode ser incorporada em outra entidade para obter a chave primária composta.
+
+Vamos criar um exemplo simples usando Hibernate, banco de dados em memória H2 e um objeto
+de domínio User com UserId como chave composta:
+
+	@Entity
+	public class User {
+	    @EmbeddedId UserId userId;
+	    String email;
+	    
+	    // constructors, getters and setters
+	}
+	
+	@Embeddable
+	public class UserId implements Serializable{
+	    private String name;
+	    private String lastName;
+	    
+	    // getters and setters
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 ====================================================================================================
